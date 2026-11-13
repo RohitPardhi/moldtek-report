@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<!-- Chosen Palette: Warm Alabaster & Petrol Slate (Main Background: #FAF9F6, Surface Cards: #FFFFFF, Primary Ink: #1C1917, Secondary Ink: #57534E, Primary Accent: #0F4C5C, Positive Accent: #2E6F40, Caution/Bear Accent: #B45309 / #991B1B) -->
+<!-- Application Structure Plan: Designed an institutional interactive Equity Research Terminal structured into six thematic, task-oriented modules rather than a linear wall of text: (1) Executive Thesis & Bull/Bear Debate Switcher for immediate synthesis of the 24-month risk-reward; (2) Business Mix & Integrated Moat Explorer combining segment economics with an HTML/CSS value-chain diagram; (3) Multi-Year Financial Health Lab with a dynamic mode-switching chart (Scale vs EPS, Margins & ROIC, Cash Flow & Debt) and searchable standalone statement table; (4) Growth Catalysts & Competitive Positioning featuring a catalyst timeline filter, FY27 guidance arithmetic gap chart, and peer valuation matrix; (5) Valuation & Live FCFF DCF Sandbox allowing users to stress-test WACC, terminal growth, and balance-sheet investment liquidity; and (6) Governance, Ownership Shifts & 24-Month Scenario Verdict with an interactive scenario probability simulator and quarterly monitoring checklist. This architecture enables investors to move seamlessly from high-level conviction to granular financial stress-testing. -->
+<!-- Visualization & Content Choices: (1) Segment Mix & Economics -> Goal: Inform/Compare -> Doughnut Chart + Interactive Segment Cards -> Click segment filter to inspect volume growth, clients, and EBITDA/kg potential -> Chart.js Canvas; (2) 5-Year + TTM Financial Trajectory -> Goal: Change/Compare -> Multi-mode Bar/Line Combo Chart + Filterable Table -> Toggle between Earnings Divergence, ROIC Compression, and FCF/Debt -> Chart.js Canvas; (3) FY27 Guidance Arithmetic Check -> Goal: Compare -> Vertical Bar Chart -> Visually contrasts ₹250 Cr stretch guidance against H1 actuals and tonnage-implied ₹218 Cr -> Chart.js Canvas; (4) Peer Benchmarking -> Goal: Compare/Relationships -> Grouped Bar Chart (P/E vs ROCE / OPM) + Sortable Peer Table -> Toggle metric views -> Chart.js Canvas; (5) FCFF Intrinsic Valuation -> Goal: Model/Relationships -> Stacked Cash Flow Bar/Line Chart + Live Interactive Sliders (WACC, Terminal Growth, Net Debt) -> Real-time recalculation of intrinsic share price vs ₹349 CMP -> Chart.js Canvas + Vanilla JS; (6) Shareholding Shift -> Goal: Change -> Horizontal Grouped Bar Chart (Jun 2025 vs Sep 2026) -> Highlights FII exit vs retail inflow -> Chart.js Canvas; (7) 24M Scenario Targets -> Goal: Compare/Simulate -> Horizontal Target Price Chart + Interactive Scenario Cards & Probability Sliders -> Dynamically updates probability-weighted expected return -> Chart.js Canvas + Vanilla JS. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mold-Tek Packaging Ltd (NSE: MOLDTKPAC) — 24-Month Equity Research Assessment</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body {
+    background-color: #FAF9F6;
+    color: #1C1917;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 290px;
+    max-height: 360px;
+    overflow: hidden;
+  }
+  @media (min-width: 768px) {
+    .chart-container {
+      height: 330px;
+    }
+  }
+  .chart-container-sm {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 260px;
+    max-height: 310px;
+    overflow: hidden;
+  }
+  .nav-pill.active {
+    background-color: #0F4C5C;
+    color: #FFFFFF;
+  }
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+  input[type="range"] {
+    accent-color: #0F4C5C;
+  }
+</style>
+</head>
+<body class="antialiased selection:bg-teal-900 selection:text-white">
+
+<header class="sticky top-0 z-40 bg-[#FAF9F6]/95 backdrop-blur border-b border-stone-200 shadow-xs">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between py-3 gap-2">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-[#0F4C5C] text-white font-bold text-sm tracking-tight">MT</span>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h1 class="text-base sm:text-lg font-bold text-stone-900 leading-tight">Mold-Tek Packaging Limited</h1>
+              <span class="px-2 py-0.5 text-xs font-semibold rounded bg-stone-200 text-stone-800">NSE: MOLDTKPAC</span>
+              <span class="px-2 py-0.5 text-xs font-semibold rounded bg-amber-100 text-amber-900 border border-amber-200">Post 1:1 Bonus</span>
+            </div>
+            <p class="text-xs text-stone-500">Institutional Equity Assessment • Data as of Nov 13, 2026 (10:30 AM IST)</p>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 sm:gap-5 text-xs sm:text-sm border-t md:border-t-0 pt-2 md:pt-0 border-stone-200">
+        <div>
+          <span class="text-stone-500 block text-[11px] uppercase tracking-wider">CMP (NSE)</span>
+          <span class="font-bold text-stone-900 tabular-nums text-base">₹349.00</span>
+          <span class="text-emerald-700 font-medium text-xs ml-1">▲ +27.3% (2W)</span>
+        </div>
+        <div class="h-7 w-px bg-stone-200"></div>
+        <div>
+          <span class="text-stone-500 block text-[11px] uppercase tracking-wider">24M Base Target</span>
+          <span class="font-bold text-[#0F4C5C] tabular-nums text-base">₹437.00</span>
+          <span class="text-emerald-700 font-medium text-xs ml-1">+25.2%</span>
+        </div>
+        <div class="h-7 w-px bg-stone-200"></div>
+        <div>
+          <span class="text-stone-500 block text-[11px] uppercase tracking-wider">Stance</span>
+          <span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-stone-800 text-white">Neutral / Buy Dips ₹290–310</span>
+        </div>
+      </div>
+    </div>
+    <nav class="flex items-center gap-1.5 overflow-x-auto py-2 border-t border-stone-200/80 text-xs font-medium no-scrollbar">
+      <a href="#thesis" class="nav-pill active px-3 py-1.5 rounded-md whitespace-nowrap transition-colors">1. Executive Thesis</a>
+      <a href="#business" class="nav-pill px-3 py-1.5 rounded-md text-stone-600 hover:bg-stone-200/60 whitespace-nowrap transition-colors">2. Business & Moat</a>
+      <a href="#financials" class="nav-pill px-3 py-1.5 rounded-md text-stone-600 hover:bg-stone-200/60 whitespace-nowrap transition-colors">3. Financial Health</a>
+      <a href="#growth-peers" class="nav-pill px-3 py-1.5 rounded-md text-stone-600 hover:bg-stone-200/60 whitespace-nowrap transition-colors">4. Growth & Peers</a>
+      <a href="#valuation" class="nav-pill px-3 py-1.5 rounded-md text-stone-600 hover:bg-stone-200/60 whitespace-nowrap transition-colors">5. Valuation & DCF</a>
+      <a href="#verdict" class="nav-pill px-3 py-1.5 rounded-md text-stone-600 hover:bg-stone-200/60 whitespace-nowrap transition-colors">6. Risks & Verdict</a>
+    </nav>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+  <section id="thesis" class="scroll-mt-28 space-y-6">
+    <div class="bg-white rounded-xl border border-stone-200 p-6 sm:p-8 shadow-2xs">
+      <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+        <div class="max-w-3xl space-y-3">
+          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-teal-50 text-[#0F4C5C] text-xs font-semibold border border-teal-200/70">
+            <span>◆</span> 24-MONTH EQUITY RESEARCH SYNTHESIS
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 tracking-tight">Balanced Risk-Reward: Margin Inflection vs. Capital Intensity</h2>
+          <p class="text-sm sm:text-base text-stone-600 leading-relaxed">
+            This opening executive summary frames our 24-month investment thesis on Mold-Tek Packaging Limited. At <strong>₹349.00 per share</strong> (post the October 12, 2026 1:1 bonus issue doubling equity to 6.646 Cr shares; Market Cap ₹2,321 Cr), the stock offers a <strong>neutral-to-modestly positive risk-reward profile</strong>. Having rallied 27.3% over two weeks around Q2 FY27 results (from ₹274.20 on Oct 30, 2026), near-term unit-margin optimism is largely embedded in its 28.4x trailing P/E multiple. Use the interactive debate switcher below to weigh the structural bull case against multi-year financial skepticism.
+          </p>
+        </div>
+        <div class="bg-stone-50 border border-stone-200 rounded-lg p-4 min-w-[260px] space-y-2 text-xs">
+          <div class="font-bold text-stone-800 uppercase tracking-wider">Data Conventions & Scope</div>
+          <ul class="space-y-1.5 text-stone-600 leading-snug">
+            <li><strong class="text-stone-800">Bonus Standardized:</strong> All historical & forward EPS/targets reflect 6.646 Cr post-bonus shares.</li>
+            <li><strong class="text-stone-800">Standalone Basis:</strong> Anchored to standalone exchange filings & ICRA Sep 2026 rationale.</li>
+            <li><strong class="text-stone-800">Disclosure Gaps:</strong> 5Y gross margin, exact client %, Sep 2026 pledge & RPT footnotes flagged where absent.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6 pt-6 border-t border-stone-200">
+        <div class="p-4 rounded-lg bg-[#FAF9F6] border border-stone-200">
+          <span class="text-xs font-semibold text-stone-500 uppercase">Base Case 24M Target</span>
+          <div class="mt-1 flex items-baseline gap-2">
+            <span class="text-2xl font-bold text-[#0F4C5C] tabular-nums">₹437</span>
+            <span class="text-xs font-semibold text-emerald-700">+25.2% (11.9% p.a.)</span>
+          </div>
+          <p class="text-xs text-stone-500 mt-1">22.0x FY29E EPS of ₹19.85 (50% prob.)</p>
+        </div>
+        <div class="p-4 rounded-lg bg-[#FAF9F6] border border-stone-200">
+          <span class="text-xs font-semibold text-stone-500 uppercase">Prob.-Weighted Value</span>
+          <div class="mt-1 flex items-baseline gap-2">
+            <span class="text-2xl font-bold text-stone-900 tabular-nums">₹443</span>
+            <span class="text-xs font-semibold text-emerald-700">+26.9% (12.6% p.a.)</span>
+          </div>
+          <p class="text-xs text-stone-500 mt-1">25% Bear (₹210) / 50% Base / 25% Bull (₹687)</p>
+        </div>
+        <div class="p-4 rounded-lg bg-[#FAF9F6] border border-stone-200">
+          <span class="text-xs font-semibold text-stone-500 uppercase">Q2 FY27 EBITDA / kg</span>
+          <div class="mt-1 flex items-baseline gap-2">
+            <span class="text-2xl font-bold text-emerald-800 tabular-nums">₹46.50</span>
+            <span class="text-xs font-semibold text-emerald-700">▲ ~18% YoY</span>
+          </div>
+          <p class="text-xs text-stone-500 mt-1">IML share hit 77.0% of Q2 volume</p>
+        </div>
+        <div class="p-4 rounded-lg bg-[#FAF9F6] border border-stone-200">
+          <span class="text-xs font-semibold text-stone-500 uppercase">5Y ROIC & Cumulative FCF</span>
+          <div class="mt-1 flex items-baseline gap-2">
+            <span class="text-2xl font-bold text-amber-800 tabular-nums">10.2%</span>
+            <span class="text-xs font-semibold text-red-700">-₹126 Cr FCF</span>
+          </div>
+          <p class="text-xs text-stone-500 mt-1">ROIC down from 16.9% in FY22</p>
+        </div>
+      </div>
+
+      <div class="mt-6 pt-6 border-t border-stone-200">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <h3 class="text-base font-bold text-stone-900">The Core Investment Debate: Structural Metamorphosis or Cyclical Rebound?</h3>
+          <div class="inline-flex rounded-lg bg-stone-100 p-1 border border-stone-200 self-start">
+            <button type="button" data-debate="both" class="debate-btn px-3 py-1 rounded-md text-xs font-semibold bg-[#0F4C5C] text-white transition-colors">Side-by-Side</button>
+            <button type="button" data-debate="bull" class="debate-btn px-3 py-1 rounded-md text-xs font-semibold text-stone-600 hover:text-stone-900 transition-colors">Bull Case Only</button>
+            <button type="button" data-debate="bear" class="debate-btn px-3 py-1 rounded-md text-xs font-semibold text-stone-600 hover:text-stone-900 transition-colors">Skeptic Case Only</button>
+          </div>
+        </div>
+        <div id="debateContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div id="bullCard" class="rounded-lg border border-emerald-200 bg-emerald-50/40 p-5 space-y-2.5">
+            <div class="flex items-center gap-2 text-emerald-900 font-bold text-sm">
+              <span class="w-6 h-6 rounded-full bg-emerald-700 text-white inline-flex items-center justify-center text-xs">▲</span>
+              <span>The Bullish Thesis (Mix Upgrade & Operating Leverage)</span>
+            </div>
+            <ul class="text-xs sm:text-sm text-stone-700 space-y-2 leading-relaxed">
+              <li><strong>Unit Margin Inflection:</strong> Q2 FY27 EBITDA/kg rose ~18% YoY to ₹46.50/kg via Hyderabad plant consolidation and 77.0% IML volume share.</li>
+              <li><strong>High-Margin Pharma & Export Catalysts:</strong> Pharma scaled +209% YoY to ₹35 Cr in FY26 (₹100–120/kg EBITDA potential); Iodex balm (Dec 2026–Jan 2027), ophthalmic droppers, and Vibe Generation UK closures (Mar–May 2027) add high-margin streams.</li>
+              <li><strong>Capex Moderation Ahead:</strong> Heavy greenfield phase is largely complete; FY27 capex stepping down to ₹80–85 Cr unlocks positive free cash flow.</li>
+            </ul>
+          </div>
+          <div id="bearCard" class="rounded-lg border border-amber-200 bg-amber-50/40 p-5 space-y-2.5">
+            <div class="flex items-center gap-2 text-amber-950 font-bold text-sm">
+              <span class="w-6 h-6 rounded-full bg-amber-700 text-white inline-flex items-center justify-center text-xs">▼</span>
+              <span>The Skeptical Counter-Case (Capital Drag & Execution Risk)</span>
+            </div>
+            <ul class="text-xs sm:text-sm text-stone-700 space-y-2 leading-relaxed">
+              <li><strong>Weak Per-Share Compounding:</strong> FY21–26 revenue grew 13.1% CAGR, yet bonus-adjusted EPS compounded at only 4.8% due to 2.8x higher depreciation, rising interest, and FY22 QIP dilution.</li>
+              <li><strong>ROIC Erosion & Negative FCF:</strong> 5-year cumulative FCF was -₹126 Cr, while ROIC fell from 16.9% (FY22) to 10.2% (FY26)—below an ~11.5% cost of capital.</li>
+              <li><strong>Stretch Guidance & Valuation:</strong> FY27 ₹250 Cr EBITDA target implies an implausible +35% H2 tonnage jump; DCF fair value sits at ₹268–₹274, and FIIs halved holdings to 7.94%.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="business" class="scroll-mt-28 space-y-6">
+    <div class="space-y-2">
+      <span class="text-xs font-bold uppercase tracking-wider text-[#0F4C5C]">Section 02 • Business Architecture & Competitive Moat</span>
+      <h2 class="text-2xl font-bold text-stone-900">Segment Mix Shift & Integrated B2B Conversion Model</h2>
+      <p class="text-sm text-stone-600 max-w-4xl leading-relaxed">
+        This section examines how Mold-Tek generates revenue across its ~65,000–67,000 MTPA manufacturing footprint (eight Indian locations, nine units) and evaluates the durability of its moat. Because polymer resin costs (PP/HDPE) are contractually passed through to B2B clients with a timing lag, percentage operating margins fluctuate mechanically with crude derivatives—making <strong>volume mix and EBITDA per kilogram</strong> the true drivers of value. Click any segment button below to inspect its growth trajectory, client concentration, and margin role.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div class="lg:col-span-5 bg-white rounded-xl border border-stone-200 p-6 shadow-2xs flex flex-col justify-between">
+        <div>
+          <h3 class="text-base font-bold text-stone-900">Revenue Mix by End-Market Vertical</h3>
+          <p class="text-xs text-stone-500 mt-0.5 mb-4">Based on Q1 FY27 / FY26 disclosures (Paints & F&F anchor ~68% of turnover; exact export split undisclosed).</p>
+          <div class="chart-container-sm">
+            <canvas id="segmentMixChart"></canvas>
+          </div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-stone-100 text-xs text-stone-600 flex items-center justify-between">
+          <span><strong>Q2 FY27 IML Share:</strong> 77.0% of Volume / 78.25% of Revenue</span>
+          <span class="text-[#0F4C5C] font-semibold">▲ Up from ~70% YoY</span>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 bg-white rounded-xl border border-stone-200 p-6 shadow-2xs flex flex-col justify-between space-y-5">
+        <div>
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <h3 class="text-base font-bold text-stone-900">Interactive Vertical Deep-Dive</h3>
+            <div class="flex flex-wrap gap-1.5" id="segmentTabs">
+              <button type="button" data-seg="paints" class="seg-btn px-3 py-1 rounded-md text-xs font-semibold bg-[#0F4C5C] text-white">Paints (~46%)</button>
+              <button type="button" data-seg="ff" class="seg-btn px-3 py-1 rounded-md text-xs font-semibold bg-stone-100 text-stone-700 hover:bg-stone-200">Food & FMCG (~22%)</button>
+              <button type="button" data-seg="lubes" class="seg-btn px-3 py-1 rounded-md text-xs font-semibold bg-stone-100 text-stone-700 hover:bg-stone-200">Lubricants (~13%)</button>
+              <button type="button" data-seg="pharma" class="seg-btn px-3 py-1 rounded-md text-xs font-semibold bg-stone-100 text-stone-700 hover:bg-stone-200">Pharma (~4%)</button>
+            </div>
+          </div>
+
+          <div id="segmentDetailBox" class="rounded-xl bg-[#FAF9F6] border border-stone-200 p-5 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-stone-200 pb-3">
+              <div>
+                <span id="segBadge" class="text-[11px] font-bold uppercase tracking-wider text-[#0F4C5C]">Core Industrial Cash Generator</span>
+                <h4 id="segTitle" class="text-lg font-bold text-stone-900">Paints Packaging (IML & HTL Pails)</h4>
+              </div>
+              <div class="text-left sm:text-right">
+                <span class="text-xs text-stone-500 block">Q2 FY27 YoY Growth</span>
+                <span id="segGrowth" class="text-sm font-bold text-emerald-700">+8.6% Volume (+26% Value)</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <div class="bg-white p-3 rounded-lg border border-stone-200">
+                <span class="text-stone-500 block">Revenue / Volume Share</span>
+                <span id="segShare" class="font-bold text-stone-900 text-sm mt-0.5 block">~44% FY26 / ~46% Q1 FY27</span>
+              </div>
+              <div class="bg-white p-3 rounded-lg border border-stone-200">
+                <span class="text-stone-500 block">Key Anchor Clients</span>
+                <span id="segClients" class="font-bold text-stone-900 text-sm mt-0.5 block">Asian Paints, Grasim (Birla Opus)</span>
+              </div>
+              <div class="bg-white p-3 rounded-lg border border-stone-200">
+                <span class="text-stone-500 block">Unit Margin / Working Cap</span>
+                <span id="segEconomics" class="font-bold text-stone-900 text-sm mt-0.5 block">75–90 day receivable cycle</span>
+              </div>
+            </div>
+            <p id="segCommentary" class="text-xs sm:text-sm text-stone-600 leading-relaxed">
+              Paints represent nearly half of company revenue and 51% of Q1 FY27 volume, anchored by Asian Paints and Grasim's Birla Opus ramp-up (served via the Mahad facility). While regional proximity and IML tooling create switching friction, concentrated buyer power enforces 75–90 day credit terms and periodic retooling (such as Asian Paints' RCP compliance transition in FY26).
+            </p>
+          </div>
+        </div>
+
+        <div class="border-t border-stone-200 pt-4">
+          <div class="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2.5">Integrated Moat Architecture vs. Structural Constraints</div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+            <div class="p-3 rounded-lg bg-teal-50/60 border border-teal-200/70">
+              <div class="font-bold text-[#0F4C5C]">1. Backward Integration</div>
+              <p class="text-stone-600 mt-1">In-house mold toolroom, custom IML robotics & captive flexo/rotogravure label printing cut lead times and support 4 granted patents.</p>
+            </div>
+            <div class="p-3 rounded-lg bg-teal-50/60 border border-teal-200/70">
+              <div class="font-bold text-[#0F4C5C]">2. Freight Proximity Barrier</div>
+              <p class="text-stone-600 mt-1">Plants near client hubs (Panipat, Cheyyar, Satara, Mahad) block distant rivals since shipping empty plastic pails long distances is uneconomic.</p>
+            </div>
+            <div class="p-3 rounded-lg bg-amber-50/70 border border-amber-200">
+              <div class="font-bold text-amber-900">3. Moat Ceiling (Buyer Power)</div>
+              <p class="text-stone-600 mt-1">Dominant paint/FMCG buyers dual-source, enforce L1 tenders (costing BPCL's ₹14–15 Cr lube contract), and demand 75–90 day credit.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="financials" class="scroll-mt-28 space-y-6">
+    <div class="space-y-2">
+      <span class="text-xs font-bold uppercase tracking-wider text-[#0F4C5C]">Section 03 • Five-Year & Latest Quarter Financial Health</span>
+      <h2 class="text-2xl font-bold text-stone-900">EBITDA Growth vs. EPS Lag, Negative Cumulative FCF & ROIC Erosion</h2>
+      <p class="text-sm text-stone-600 max-w-4xl leading-relaxed">
+        Evaluating Mold-Tek's standalone financial statements from FY22 through Q2 FY27 exposes a critical divergence: while revenue and EBITDA compounded at ~13% annually with stable ~19% operating margins, heavy capital expenditure tripled depreciation, raised finance costs, and compressed return on invested capital (ROIC) from 16.9% to 10.2%. Toggle between the three chart views below to inspect earnings conversion, capital efficiency, and cash flow leverage.
+      </p>
+    </div>
+
+    <div class="bg-white rounded-xl border border-stone-200 p-6 shadow-2xs space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-stone-200 pb-4">
+        <div>
+          <h3 id="finChartTitle" class="text-base font-bold text-stone-900">Scale vs. Per-Share Earnings Divergence (FY22–TTM)</h3>
+          <p id="finChartSubtitle" class="text-xs text-stone-500 mt-0.5">Standalone Revenue & EBITDA (₹ Cr) vs. Bonus-Adjusted EPS (₹) — showing depreciation & interest drag.</p>
+        </div>
+        <div class="inline-flex flex-wrap rounded-lg bg-stone-100 p-1 border border-stone-200 gap-1">
+          <button type="button" data-finmode="earnings" class="fin-mode-btn px-3 py-1.5 rounded-md text-xs font-semibold bg-[#0F4C5C] text-white transition-colors">Revenue, EBITDA & EPS</button>
+          <button type="button" data-finmode="roic" class="fin-mode-btn px-3 py-1.5 rounded-md text-xs font-semibold text-stone-700 hover:bg-stone-200/70 transition-colors">Margins & ROIC Erosion</button>
+          <button type="button" data-finmode="cashflow" class="fin-mode-btn px-3 py-1.5 rounded-md text-xs font-semibold text-stone-700 hover:bg-stone-200/70 transition-colors">CFO, FCF & Borrowings</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        <div class="lg:col-span-8">
+          <div class="chart-container">
+            <canvas id="financialTrendsChart"></canvas>
+          </div>
+        </div>
+        <div class="lg:col-span-4 space-y-3">
+          <div class="p-4 rounded-lg bg-[#FAF9F6] border border-stone-200 space-y-1.5">
+            <div class="text-xs font-bold uppercase text-[#0F4C5C]">Q2 FY27 Latest Quarter Pulse</div>
+            <div class="flex justify-between text-xs"><span class="text-stone-600">Standalone Revenue:</span><span class="font-bold tabular-nums">₹274.23 Cr (+30.7% YoY)</span></div>
+            <div class="flex justify-between text-xs"><span class="text-stone-600">Sales Volume:</span><span class="font-bold tabular-nums">11,028 MT (+10.08% YoY)</span></div>
+            <div class="flex justify-between text-xs"><span class="text-stone-600">EBITDA / Margin:</span><span class="font-bold tabular-nums">₹51.27 Cr (18.70%)</span></div>
+            <div class="flex justify-between text-xs"><span class="text-stone-600">Net Profit (PAT):</span><span class="font-bold tabular-nums">₹21.07 Cr (+36.1% YoY)</span></div>
+            <div class="flex justify-between text-xs"><span class="text-stone-600">H1 FY27 Combined:</span><span class="font-bold tabular-nums">₹574.67 Cr Rev / ₹46.67 Cr PAT</span></div>
+          </div>
+          <div class="p-4 rounded-lg bg-[#FAF9F6] border border-stone-200 space-y-1.5">
+            <div class="text-xs font-bold uppercase text-stone-800">Balance Sheet & Credit Check</div>
+            <div class="flex justify-between text-xs"><span class="text-stone-600">Borrowings (Sep 2026):</span><span class="font-bold tabular-nums">₹204.0 Cr (0.28x–0.31x D/E)</span></div>
+            <div class="flex justify-between text-xs"><span class="text-stone-600">Credit Rating (ICRA):</span><span class="font-bold text-emerald-800">[ICRA]A+ (Positive) / A1</span></div>
+            <div class="flex justify-between text-xs"><span class="text-stone-600">EBIT Interest Coverage:</span><span class="font-bold tabular-nums text-amber-800">6.3x FY26 (down from 26.5x)</span></div>
+            <div class="flex justify-between text-xs"><span class="text-stone-600">5Y Cumulative FCF:</span><span class="font-bold tabular-nums text-red-700">-₹126.0 Cr (₹469 Cr CFO)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-stone-200">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+          <h4 class="text-sm font-bold text-stone-900">Standalone Financial Summary Table (₹ Cr, except EPS & Ratios)</h4>
+          <span class="text-xs text-stone-500">Note: 5Y standalone gross margin series unavailable in reviewed filings (Q4 FY26 implied material margin: 44.8%).</span>
+        </div>
+        <div class="overflow-x-auto rounded-lg border border-stone-200">
+          <table class="min-w-full divide-y divide-stone-200 text-xs tabular-nums">
+            <thead class="bg-stone-100 text-stone-700 font-semibold">
+              <tr>
+                <th class="px-3 py-2.5 text-left">Metric</th>
+                <th class="px-3 py-2.5 text-right">FY22</th>
+                <th class="px-3 py-2.5 text-right">FY23</th>
+                <th class="px-3 py-2.5 text-right">FY24</th>
+                <th class="px-3 py-2.5 text-right">FY25</th>
+                <th class="px-3 py-2.5 text-right">FY26</th>
+                <th class="px-3 py-2.5 text-right bg-teal-50/70 text-[#0F4C5C]">TTM (Sep 26)</th>
+                <th class="px-3 py-2.5 text-right bg-teal-50/70 text-[#0F4C5C]">Q2 FY27</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-stone-200 bg-white">
+              <tr>
+                <td class="px-3 py-2 font-medium text-stone-900">Revenue from Operations</td>
+                <td class="px-3 py-2 text-right">631.0</td>
+                <td class="px-3 py-2 text-right">730.0</td>
+                <td class="px-3 py-2 text-right">699.0</td>
+                <td class="px-3 py-2 text-right">781.3</td>
+                <td class="px-3 py-2 text-right">886.6</td>
+                <td class="px-3 py-2 text-right font-semibold bg-teal-50/30">1,011.0</td>
+                <td class="px-3 py-2 text-right font-semibold bg-teal-50/30">274.2</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 font-medium text-stone-900">Operating Profit (EBITDA)</td>
+                <td class="px-3 py-2 text-right">121.0</td>
+                <td class="px-3 py-2 text-right">136.0</td>
+                <td class="px-3 py-2 text-right">133.0</td>
+                <td class="px-3 py-2 text-right">142.0</td>
+                <td class="px-3 py-2 text-right">173.0</td>
+                <td class="px-3 py-2 text-right font-semibold bg-teal-50/30">193.0</td>
+                <td class="px-3 py-2 text-right font-semibold bg-teal-50/30">51.3</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 text-stone-600">Operating Margin (OPM %)</td>
+                <td class="px-3 py-2 text-right">19.2%</td>
+                <td class="px-3 py-2 text-right">18.6%</td>
+                <td class="px-3 py-2 text-right">19.0%</td>
+                <td class="px-3 py-2 text-right">18.2%</td>
+                <td class="px-3 py-2 text-right">19.5%</td>
+                <td class="px-3 py-2 text-right bg-teal-50/30">19.1%</td>
+                <td class="px-3 py-2 text-right bg-teal-50/30">18.7%</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 text-stone-600">Depreciation</td>
+                <td class="px-3 py-2 text-right">26.0</td>
+                <td class="px-3 py-2 text-right">30.0</td>
+                <td class="px-3 py-2 text-right">38.0</td>
+                <td class="px-3 py-2 text-right">49.0</td>
+                <td class="px-3 py-2 text-right">59.0</td>
+                <td class="px-3 py-2 text-right bg-teal-50/30">65.0</td>
+                <td class="px-3 py-2 text-right bg-teal-50/30">18.0</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 text-stone-600">Interest / Finance Cost</td>
+                <td class="px-3 py-2 text-right">9.0</td>
+                <td class="px-3 py-2 text-right">4.0</td>
+                <td class="px-3 py-2 text-right">8.0</td>
+                <td class="px-3 py-2 text-right">14.0</td>
+                <td class="px-3 py-2 text-right">18.0</td>
+                <td class="px-3 py-2 text-right bg-teal-50/30">20.0</td>
+                <td class="px-3 py-2 text-right bg-teal-50/30">5.5</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 font-medium text-stone-900">Net Profit (PAT)</td>
+                <td class="px-3 py-2 text-right">64.0</td>
+                <td class="px-3 py-2 text-right">80.0</td>
+                <td class="px-3 py-2 text-right">67.0</td>
+                <td class="px-3 py-2 text-right">60.6</td>
+                <td class="px-3 py-2 text-right">72.9</td>
+                <td class="px-3 py-2 text-right font-semibold bg-teal-50/30">82.0</td>
+                <td class="px-3 py-2 text-right font-semibold bg-teal-50/30">21.1</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 font-semibold text-[#0F4C5C]">Bonus-Adjusted EPS (₹)</td>
+                <td class="px-3 py-2 text-right">10.19</td>
+                <td class="px-3 py-2 text-right">12.13</td>
+                <td class="px-3 py-2 text-right">10.01</td>
+                <td class="px-3 py-2 text-right">9.11</td>
+                <td class="px-3 py-2 text-right">10.96</td>
+                <td class="px-3 py-2 text-right font-bold bg-teal-50/30 text-[#0F4C5C]">12.28</td>
+                <td class="px-3 py-2 text-right font-bold bg-teal-50/30 text-[#0F4C5C]">3.17</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 text-stone-600">Free Cash Flow (FCF)</td>
+                <td class="px-3 py-2 text-right text-red-700">-50.0</td>
+                <td class="px-3 py-2 text-right text-emerald-700">5.0</td>
+                <td class="px-3 py-2 text-right text-red-700">-56.0</td>
+                <td class="px-3 py-2 text-right text-red-700">-33.0</td>
+                <td class="px-3 py-2 text-right text-emerald-700">8.0</td>
+                <td class="px-3 py-2 text-right text-stone-400 bg-teal-50/30">NA</td>
+                <td class="px-3 py-2 text-right text-stone-400 bg-teal-50/30">NA</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 font-medium text-stone-900">Calculated ROIC (%)</td>
+                <td class="px-3 py-2 text-right font-semibold text-emerald-800">16.9%</td>
+                <td class="px-3 py-2 text-right">15.2%</td>
+                <td class="px-3 py-2 text-right">11.4%</td>
+                <td class="px-3 py-2 text-right text-amber-800">9.5%</td>
+                <td class="px-3 py-2 text-right text-amber-800">10.2%</td>
+                <td class="px-3 py-2 text-right text-stone-400 bg-teal-50/30">NA</td>
+                <td class="px-3 py-2 text-right text-stone-400 bg-teal-50/30">NA</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="growth-peers" class="scroll-mt-28 space-y-6">
+    <div class="space-y-2">
+      <span class="text-xs font-bold uppercase tracking-wider text-[#0F4C5C]">Section 04 • Two-Year Growth Catalysts & Competitive Positioning</span>
+      <h2 class="text-2xl font-bold text-stone-900">New Product Pipeline, FY27 Guidance Stretch & Peer Benchmarks</h2>
+      <p class="text-sm text-stone-600 max-w-4xl leading-relaxed">
+        Over the next 24 months (H2 FY27–FY29), Mold-Tek aims to pivot from industrial pails toward higher-margin pharma canisters, ophthalmic droppers, and UK-designed export closures (Vibe Generation). However, reconciling management's ₹250 Cr FY27 EBITDA guidance against H1 actuals reveals a ~₹32 Cr arithmetic shortfall, while peer benchmarking shows Mold-Tek trading at a 50%+ P/E premium over higher-ROCE packaging peers.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div class="lg:col-span-7 bg-white rounded-xl border border-stone-200 p-6 shadow-2xs space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h3 class="text-base font-bold text-stone-900">24-Month Catalyst Pipeline & Execution Risk</h3>
+            <p class="text-xs text-stone-500">Filter catalysts by commercialization window to assess near-term vs. speculative drivers.</p>
+          </div>
+          <div class="inline-flex rounded-lg bg-stone-100 p-1 border border-stone-200 text-xs">
+            <button type="button" data-cat="all" class="cat-btn px-2.5 py-1 rounded font-semibold bg-[#0F4C5C] text-white">All (6)</button>
+            <button type="button" data-cat="near" class="cat-btn px-2.5 py-1 rounded font-semibold text-stone-600">H2 FY27–Q1 FY28</button>
+            <button type="button" data-cat="long" class="cat-btn px-2.5 py-1 rounded font-semibold text-stone-600">2028+ / Speculative</button>
+          </div>
+        </div>
+
+        <div id="catalystList" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div data-window="near" class="catalyst-card p-3.5 rounded-lg border border-stone-200 bg-[#FAF9F6] space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="px-2 py-0.5 text-[11px] font-bold rounded bg-emerald-100 text-emerald-900">Dec 2026 – Jan 2027</span>
+              <span class="text-[11px] font-semibold text-stone-500">Pharma</span>
+            </div>
+            <h4 class="text-sm font-bold text-stone-900">Iodex Balm & MNC Pharma Packs</h4>
+            <p class="text-xs text-stone-600">Millions of units/month targeted; anchors FY27 pharma goal of ₹50–55 Cr (₹100–120/kg EBITDA). Previously delayed; &lt;50% of 25+ audited clients ordering commercially.</p>
+          </div>
+          <div data-window="near" class="catalyst-card p-3.5 rounded-lg border border-stone-200 bg-[#FAF9F6] space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="px-2 py-0.5 text-[11px] font-bold rounded bg-emerald-100 text-emerald-900">Mar – May 2027</span>
+              <span class="text-[11px] font-semibold text-stone-500">Pharma / Healthcare</span>
+            </div>
+            <h4 class="text-sm font-bold text-stone-900">Ophthalmic Eye-Dropper Packs</h4>
+            <p class="text-xs text-stone-600">Supports 30%–40%+ pharma growth trajectory. Molds due Jan 2027 followed by 2 months of trials; Sultanpur B-Block facility under setup.</p>
+          </div>
+          <div data-window="near" class="catalyst-card p-3.5 rounded-lg border border-stone-200 bg-[#FAF9F6] space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="px-2 py-0.5 text-[11px] font-bold rounded bg-teal-100 text-teal-900">Mar – Apr 2027</span>
+              <span class="text-[11px] font-semibold text-stone-500">Export Closures</span>
+            </div>
+            <h4 class="text-sm font-bold text-stone-900">Vibe Generation (UK) Closures</h4>
+            <p class="text-xs text-stone-600">Guided at USD 5–6 Mn (₹50–60 Cr) in 1–2 yrs at ~30% EBITDA margin. 7 products in Nov 2026 client trials; royalty/revenue share payable to Vibe.</p>
+          </div>
+          <div data-window="near" class="catalyst-card p-3.5 rounded-lg border border-stone-200 bg-[#FAF9F6] space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="px-2 py-0.5 text-[11px] font-bold rounded bg-stone-200 text-stone-800">Ongoing FY27–FY29</span>
+              <span class="text-[11px] font-semibold text-stone-500">Core F&F / Paints</span>
+            </div>
+            <h4 class="text-sm font-bold text-stone-900">Thin-Wall F&F & Birla Opus Ramp</h4>
+            <p class="text-xs text-stone-600">F&F compounding 18%–20% (Panipat doubled to 8 machines, Swiggy merchant tie-up); Mahad ramps Grasim paint pails (Q2 paint vol +8.6% trailed 10–15% target).</p>
+          </div>
+          <div data-window="long" class="catalyst-card p-3.5 rounded-lg border border-amber-200 bg-amber-50/40 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="px-2 py-0.5 text-[11px] font-bold rounded bg-amber-100 text-amber-900">Late 2027 / 2028+</span>
+              <span class="text-[11px] font-semibold text-amber-800">High Execution Risk</span>
+            </div>
+            <h4 class="text-sm font-bold text-stone-900">Auto-Injector Dosing Pens</h4>
+            <p class="text-xs text-stone-600">Long-term goal of 1 Mn pens/month. Already delayed past earlier 1-year timeline (zero revenue expected in next 6 months); competes with entrenched Shaily Engineering.</p>
+          </div>
+          <div data-window="long" class="catalyst-card p-3.5 rounded-lg border border-amber-200 bg-amber-50/40 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="px-2 py-0.5 text-[11px] font-bold rounded bg-amber-100 text-amber-900">2028+ Exploratory</span>
+              <span class="text-[11px] font-semibold text-amber-800">Unproven Right-to-Win</span>
+            </div>
+            <h4 class="text-sm font-bold text-stone-900">Semiconductor JEDEC Trays</h4>
+            <p class="text-xs text-stone-600">JV discussions scheduled for Dec 2026. Analysts flagged steep technical barriers and entrenched Chinese/Korean incumbents on Q2 FY27 call.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-5 bg-white rounded-xl border border-stone-200 p-6 shadow-2xs flex flex-col justify-between">
+        <div>
+          <h3 class="text-base font-bold text-stone-900">FY27 EBITDA Guidance Arithmetic Gap</h3>
+          <p class="text-xs text-stone-500 mt-0.5 mb-3">
+            H1 FY27 delivered ₹107.7 Cr EBITDA on 23,117 MT (+8.04% YoY). Even at full-year guided ~47,300 MT and ₹46/kg, implied EBITDA is ~₹218 Cr—leaving a <strong>~₹32 Cr gap</strong> vs. management's ₹250 Cr stretch goal.
+          </p>
+          <div class="chart-container-sm">
+            <canvas id="guidanceBridgeChart"></canvas>
+          </div>
+        </div>
+        <div class="mt-3 pt-3 border-t border-stone-100 text-xs text-stone-600">
+          <strong>Sell-Side Consensus:</strong> Axis Direct rates <em>Buy</em> (₹450 TP, Nov 3, 2026); Prabhudas Lilladher rates <em>Accumulate</em> (Nov 2, 2026). Both model below management's ₹250 Cr stretch figure.
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl border border-stone-200 p-6 shadow-2xs space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h3 class="text-base font-bold text-stone-900">Competitive Landscape: Valuation vs. Capital Return</h3>
+          <p class="text-xs text-stone-500">Mold-Tek commands a 28.4x TTM P/E (~50%+ above the 17.1x–18.8x packaging median) despite trailing peers on ROCE (13.3%).</p>
+        </div>
+        <div class="inline-flex rounded-lg bg-stone-100 p-1 border border-stone-200 text-xs self-start">
+          <button type="button" data-peermode="pe_roce" class="peer-mode-btn px-3 py-1 rounded font-semibold bg-[#0F4C5C] text-white">TTM P/E vs. ROCE (%)</button>
+          <button type="button" data-peermode="margin_roe" class="peer-mode-btn px-3 py-1 rounded font-semibold text-stone-700">OPM % vs. ROE %</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        <div class="lg:col-span-6">
+          <div class="chart-container">
+            <canvas id="peerValuationChart"></canvas>
+          </div>
+        </div>
+        <div class="lg:col-span-6 overflow-x-auto rounded-lg border border-stone-200">
+          <table class="min-w-full divide-y divide-stone-200 text-xs tabular-nums">
+            <thead class="bg-stone-100 text-stone-700 font-semibold">
+              <tr>
+                <th class="px-3 py-2 text-left">Peer (NSE)</th>
+                <th class="px-3 py-2 text-right">MCap (₹ Cr)</th>
+                <th class="px-3 py-2 text-right">OPM</th>
+                <th class="px-3 py-2 text-right">ROCE / ROE</th>
+                <th class="px-3 py-2 text-right">TTM P/E</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-stone-200 bg-white">
+              <tr class="bg-teal-50/50 font-semibold">
+                <td class="px-3 py-2 text-[#0F4C5C]">Mold-Tek Packaging</td>
+                <td class="px-3 py-2 text-right">2,321</td>
+                <td class="px-3 py-2 text-right">19.1%</td>
+                <td class="px-3 py-2 text-right">13.3% / 10.8%</td>
+                <td class="px-3 py-2 text-right">28.4x</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 font-medium">Hitech Corporation</td>
+                <td class="px-3 py-2 text-right">710</td>
+                <td class="px-3 py-2 text-right">~13.0%</td>
+                <td class="px-3 py-2 text-right">9.6% / 5.7%</td>
+                <td class="px-3 py-2 text-right">57.8x</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 font-medium">Shaily Engineering</td>
+                <td class="px-3 py-2 text-right">14,266</td>
+                <td class="px-3 py-2 text-right">~14.5%</td>
+                <td class="px-3 py-2 text-right">30.3% / 28.2%</td>
+                <td class="px-3 py-2 text-right">70.0x</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 font-medium">EPL Ltd</td>
+                <td class="px-3 py-2 text-right">7,662</td>
+                <td class="px-3 py-2 text-right">~20.0%</td>
+                <td class="px-3 py-2 text-right">17.8% / 16.1%</td>
+                <td class="px-3 py-2 text-right">18.4x</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 font-medium">TCPL Packaging</td>
+                <td class="px-3 py-2 text-right">3,915</td>
+                <td class="px-3 py-2 text-right">16.5%</td>
+                <td class="px-3 py-2 text-right">17.9% / 15.5%</td>
+                <td class="px-3 py-2 text-right">29.0x</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 font-medium">Time Technoplast</td>
+                <td class="px-3 py-2 text-right">9,401</td>
+                <td class="px-3 py-2 text-right">15.0%</td>
+                <td class="px-3 py-2 text-right">16.5% / 13.1%</td>
+                <td class="px-3 py-2 text-right">18.7x</td>
+              </tr>
+              <tr class="bg-stone-50 font-semibold text-stone-700">
+                <td class="px-3 py-2">Packaging Sector Median</td>
+                <td class="px-3 py-2 text-right">~525</td>
+                <td class="px-3 py-2 text-right">-</td>
+                <td class="px-3 py-2 text-right">13.0% ROCE</td>
+                <td class="px-3 py-2 text-right">17.1–18.8x</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="valuation" class="scroll-mt-28 space-y-6">
+    <div class="space-y-2">
+      <span class="text-xs font-bold uppercase tracking-wider text-[#0F4C5C]">Section 05 • Multiples & Intrinsic DCF Valuation</span>
+      <h2 class="text-2xl font-bold text-stone-900">Interactive FCFF Valuation Sandbox & Historical Multiples</h2>
+      <p class="text-sm text-stone-600 max-w-4xl leading-relaxed">
+        While Mold-Tek's 28.4x trailing P/E sits modestly below its five-year median of 32.1x, historical multiples were earned when ROCE exceeded 22% (vs. 13.3% today). Our explicit 5-Year Free Cash Flow to Firm (FCFF) DCF model (11.5% WACC, 5.0% terminal growth, 25.5% tax rate, 15% incremental working capital/sales) yields an intrinsic fair value of <strong>₹274 per share (-21.4% below CMP)</strong>. Adjust the WACC, terminal growth rate, and September 2026 investment liquidity sliders below to test what assumptions are required to justify ₹349.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div class="bg-white p-3.5 rounded-lg border border-stone-200">
+        <span class="text-[11px] font-semibold text-stone-500 uppercase">TTM P/E</span>
+        <div class="text-lg font-bold text-stone-900 tabular-nums mt-0.5">28.4x</div>
+        <span class="text-[11px] text-stone-500">5Y Median: 32.1x</span>
+      </div>
+      <div class="bg-white p-3.5 rounded-lg border border-stone-200">
+        <span class="text-[11px] font-semibold text-stone-500 uppercase">Fwd P/E (FY27E/28E)</span>
+        <div class="text-lg font-bold text-[#0F4C5C] tabular-nums mt-0.5">25.5x / 20.3x</div>
+        <span class="text-[11px] text-stone-500">Est. EPS ₹13.68 / ₹17.17</span>
+      </div>
+      <div class="bg-white p-3.5 rounded-lg border border-stone-200">
+        <span class="text-[11px] font-semibold text-stone-500 uppercase">TTM EV / EBITDA</span>
+        <div class="text-lg font-bold text-stone-900 tabular-nums mt-0.5">12.8x–13.1x</div>
+        <span class="text-[11px] text-stone-500">FY27E: ~11.7x</span>
+      </div>
+      <div class="bg-white p-3.5 rounded-lg border border-stone-200">
+        <span class="text-[11px] font-semibold text-stone-500 uppercase">Price / Book (P/B)</span>
+        <div class="text-lg font-bold text-stone-900 tabular-nums mt-0.5">3.14x</div>
+        <span class="text-[11px] text-stone-500">5Y Range: 2.3x–3.5x</span>
+      </div>
+      <div class="bg-white p-3.5 rounded-lg border border-stone-200">
+        <span class="text-[11px] font-semibold text-stone-500 uppercase">Price / Sales (P/S)</span>
+        <div class="text-lg font-bold text-stone-900 tabular-nums mt-0.5">2.30x</div>
+        <span class="text-[11px] text-stone-500">Full for ~8% NPM</span>
+      </div>
+      <div class="bg-white p-3.5 rounded-lg border border-stone-200">
+        <span class="text-[11px] font-semibold text-stone-500 uppercase">PEG Ratio</span>
+        <div class="text-lg font-bold text-amber-800 tabular-nums mt-0.5">1.8x TTM</div>
+        <span class="text-[11px] text-stone-500">Fwd 2–3Y Est: 1.13–1.30x</span>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl border border-stone-200 p-6 shadow-2xs">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-5 space-y-5 bg-[#FAF9F6] p-5 rounded-xl border border-stone-200">
+          <div>
+            <h3 class="text-base font-bold text-stone-900">Live FCFF DCF Model Controls</h3>
+            <p class="text-xs text-stone-500 mt-0.5">Base projection: FY27E–FY32E Revenue ₹1,110 Cr → ₹1,880 Cr; EBITDA margin 19.2% → 20.0%.</p>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <label for="waccSlider" class="text-stone-700">Weighted Average Cost of Capital (WACC)</label>
+                <span id="waccVal" class="text-[#0F4C5C] font-bold tabular-nums">11.5%</span>
+              </div>
+              <input id="waccSlider" type="range" min="10.0" max="13.0" step="0.25" value="11.5" class="w-full cursor-pointer">
+              <div class="flex justify-between text-[10px] text-stone-400"><span>10.0% (Aggressive)</span><span>11.5% (Base)</span><span>13.0% (Conservative)</span></div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <label for="tgSlider" class="text-stone-700">Terminal Growth Rate (Post-FY32E)</label>
+                <span id="tgVal" class="text-[#0F4C5C] font-bold tabular-nums">5.0%</span>
+              </div>
+              <input id="tgSlider" type="range" min="4.0" max="6.0" step="0.25" value="5.0" class="w-full cursor-pointer">
+              <div class="flex justify-between text-[10px] text-stone-400"><span>4.0%</span><span>5.0% (Base)</span><span>6.0%</span></div>
+            </div>
+
+            <div>
+              <span class="text-xs font-semibold text-stone-700 block mb-1.5">Sep 2026 Investments (₹45 Cr) Liquidity Treatment</span>
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <button type="button" id="liqYesBtn" class="px-2.5 py-2 rounded-lg font-semibold bg-[#0F4C5C] text-white border border-[#0F4C5C] text-left">
+                  Liquid Cash Equiv.
+                  <span class="block text-[10px] font-normal opacity-90">Net Debt: ₹159 Cr</span>
+                </button>
+                <button type="button" id="liqNoBtn" class="px-2.5 py-2 rounded-lg font-semibold bg-white text-stone-700 border border-stone-300 text-left">
+                  Illiquid / Non-Current
+                  <span class="block text-[10px] font-normal text-stone-500">Net Debt: ₹203 Cr</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-stone-200 grid grid-cols-2 gap-3">
+            <div class="bg-white p-3 rounded-lg border border-stone-200">
+              <span class="text-[11px] text-stone-500 block">Implied Enterprise Value</span>
+              <span id="dcfEvOut" class="text-base font-bold text-stone-900 tabular-nums">₹1,982 Cr</span>
+            </div>
+            <div class="bg-white p-3 rounded-lg border border-stone-200">
+              <span class="text-[11px] text-stone-500 block">Implied Equity Value</span>
+              <span id="dcfEqOut" class="text-base font-bold text-stone-900 tabular-nums">₹1,823 Cr</span>
+            </div>
+            <div class="col-span-2 bg-white p-3.5 rounded-lg border-2 border-[#0F4C5C] flex items-center justify-between">
+              <div>
+                <span class="text-xs font-bold text-stone-600 block">DCF Intrinsic Fair Value / Share</span>
+                <span id="dcfDiffOut" class="text-xs font-semibold text-red-700">-21.4% vs. ₹349.00 CMP</span>
+              </div>
+              <span id="dcfPriceOut" class="text-2xl font-extrabold text-[#0F4C5C] tabular-nums">₹274</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 flex flex-col justify-between space-y-4">
+          <div>
+            <h3 class="text-base font-bold text-stone-900">Projected Operating Cash Generation & FCFF (FY27E–FY32E)</h3>
+            <p class="text-xs text-stone-500 mt-0.5">As capex moderates from ₹85 Cr (FY27E) to ~6% of sales (₹112 Cr in FY32E), annual FCFF scales from ₹58.5 Cr to ₹168.4 Cr.</p>
+          </div>
+          <div class="chart-container">
+            <canvas id="dcfProjectionChart"></canvas>
+          </div>
+          <div class="bg-amber-50/70 border border-amber-200 rounded-lg p-3 text-xs text-stone-700">
+            <strong>Valuation Takeaway:</strong> Even lowering WACC to 11.0% and raising terminal growth to 5.5% yields <strong>₹325/share</strong>. Only an aggressive 10.5% WACC + 5.5% terminal growth lifts intrinsic value to ₹361—confirming that ₹349 already discounts near-flawless execution.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="verdict" class="scroll-mt-28 space-y-6">
+    <div class="space-y-2">
+      <span class="text-xs font-bold uppercase tracking-wider text-[#0F4C5C]">Section 06 • Risks, Ownership Flows & 24-Month Verdict</span>
+      <h2 class="text-2xl font-bold text-stone-900">Scenario Targets, Institutional Outflows & Quarterly Monitoring Checklist</h2>
+      <p class="text-sm text-stone-600 max-w-4xl leading-relaxed">
+        Synthesizing operational fundamentals, ownership trends, and valuation leads to a <strong>Medium-confidence Neutral stance</strong> at ₹349. While domestic institutions have accumulated shares, foreign institutional investors (FIIs) cut their stake by more than half over five quarters, and promoter ownership sits at a relatively low 33.17%. Explore the 24-month scenarios below and use the interactive checklist to track quarterly thesis validation.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div class="lg:col-span-7 bg-white rounded-xl border border-stone-200 p-6 shadow-2xs space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h3 class="text-base font-bold text-stone-900">24-Month Scenario Analysis (Through November 2028)</h3>
+            <p class="text-xs text-stone-500">Valued on projected FY29E EPS across 6.646 Cr post-bonus shares. Click any scenario card for assumptions.</p>
+          </div>
+          <button type="button" id="resetProbBtn" class="text-xs font-semibold text-[#0F4C5C] hover:underline self-start">Reset Base Weights (25/50/25)</button>
+        </div>
+
+        <div class="chart-container-sm">
+          <canvas id="scenarioChart"></canvas>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="p-3.5 rounded-lg border border-red-200 bg-red-50/40 space-y-1.5">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-bold text-red-900 uppercase">Bear Case</span>
+              <span class="text-xs font-bold text-red-800">₹210 (-39.8%)</span>
+            </div>
+            <p class="text-[11px] text-stone-600 leading-snug">8.9% 3Y sales CAGR; 17.0% OPM; FY29E EPS ₹11.06 at 19.0x P/E. Pharma/Vibe stall; ROIC stuck ~9–10%.</p>
+            <div class="pt-1">
+              <label class="text-[10px] font-semibold text-stone-600 flex justify-between"><span>Weight:</span><span id="bearProbLbl">25%</span></label>
+              <input id="bearProb" type="range" min="0" max="100" step="5" value="25" class="w-full h-1.5">
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-lg border-2 border-[#0F4C5C] bg-teal-50/30 space-y-1.5">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-bold text-[#0F4C5C] uppercase">Base Case</span>
+              <span class="text-xs font-bold text-emerald-800">₹437 (+25.2%)</span>
+            </div>
+            <p class="text-[11px] text-stone-600 leading-snug">16.4% 3Y sales CAGR; 19.5% OPM; FY29E EPS ₹19.85 at 22.0x P/E. Pharma ~₹95 Cr, Vibe ~₹40 Cr, ROIC 14–16%.</p>
+            <div class="pt-1">
+              <label class="text-[10px] font-semibold text-stone-600 flex justify-between"><span>Weight:</span><span id="baseProbLbl">50%</span></label>
+              <input id="baseProb" type="range" min="0" max="100" step="5" value="50" class="w-full h-1.5">
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-lg border border-emerald-200 bg-emerald-50/40 space-y-1.5">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-bold text-emerald-900 uppercase">Bull Case</span>
+              <span class="text-xs font-bold text-emerald-800">₹687 (+96.8%)</span>
+            </div>
+            <p class="text-[11px] text-stone-600 leading-snug">21.1% 3Y sales CAGR; 21.0% OPM; FY29E EPS ₹26.44 at 26.0x P/E. Pharma &gt;₹130 Cr, Vibe ₹60+ Cr, ROIC &gt;18%.</p>
+            <div class="pt-1">
+              <label class="text-[10px] font-semibold text-stone-600 flex justify-between"><span>Weight:</span><span id="bullProbLbl">25%</span></label>
+              <input id="bullProb" type="range" min="0" max="100" step="5" value="25" class="w-full h-1.5">
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-lg bg-stone-100 border border-stone-200 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <span>Normalized Probability-Weighted 24M Expected Target:</span>
+          <span id="weightedTargetOut" class="font-bold text-sm text-[#0F4C5C] tabular-nums">₹443 (+26.9% / 12.6% annualized)</span>
+        </div>
+      </div>
+
+      <div class="lg:col-span-5 bg-white rounded-xl border border-stone-200 p-6 shadow-2xs flex flex-col justify-between space-y-4">
+        <div>
+          <h3 class="text-base font-bold text-stone-900">Shareholding Shift & Key Risk Flags</h3>
+          <p class="text-xs text-stone-500 mt-0.5 mb-3">FII stake dropped from 16.91% (Jun 2025) to 7.94% (Sep 2026) as retail public rose to 37.26%.</p>
+          <div class="chart-container-sm">
+            <canvas id="shareholdingChart"></canvas>
+          </div>
+        </div>
+        <div class="space-y-2 text-xs border-t border-stone-200 pt-3">
+          <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
+            <strong class="text-stone-900">Governance & Succession:</strong> Clean secretarial audits (minor ₹36L AY21-22 tax demand), but CMD signaled a 2-year leadership transition to next-gen management; FY26 RPT & Sep 2026 pledge footnotes unavailable.
+          </div>
+          <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
+            <strong class="text-stone-900">Macro & Supply Chain:</strong> PP resin spikes (₹130–150/kg in Q1 FY27) inflate working capital debt (+31% Q2 interest); Middle East base-oil disruptions drove a ~15% H1 lubricant contraction.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div class="lg:col-span-7 bg-white rounded-xl border border-stone-200 p-6 shadow-2xs space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-base font-bold text-stone-900">Final Assessment Matrix</h3>
+          <span class="px-2.5 py-1 rounded text-xs font-bold bg-amber-100 text-amber-900">Confidence Level: Medium</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <div class="p-3.5 rounded-lg bg-emerald-50/50 border border-emerald-200 space-y-1">
+            <div class="font-bold text-emerald-900 uppercase">Strengths</div>
+            <p class="text-stone-700 leading-relaxed">Indian IML market leader (~25% rigid share; 77% Q2 volume IML); integrated tooling/robotics/printing; ₹46.5/kg EBITDA inflection; conservative 0.3x D/E & [ICRA]A+ (Positive) rating.</p>
+          </div>
+          <div class="p-3.5 rounded-lg bg-red-50/40 border border-red-200 space-y-1">
+            <div class="font-bold text-red-900 uppercase">Weaknesses</div>
+            <p class="text-stone-700 leading-relaxed">ROIC fell from 16.9% (FY22) to 10.2% (FY26); -₹126 Cr 5Y cumulative FCF; 4.8% 5Y EPS CAGR; ~46% paint concentration with 75–90 day receivables; low 33.17% promoter stake & FII outflows.</p>
+          </div>
+          <div class="p-3.5 rounded-lg bg-teal-50/50 border border-teal-200 space-y-1">
+            <div class="font-bold text-[#0F4C5C] uppercase">Catalysts</div>
+            <p class="text-stone-700 leading-relaxed">Iodex balm launch (Dec 2026–Jan 2027); ophthalmic droppers & Vibe UK closures (Mar–May 2027); Mahad Grasim ramp; capex moderation to ₹80–85 Cr unlocking positive FCF.</p>
+          </div>
+          <div class="p-3.5 rounded-lg bg-amber-50/50 border border-amber-200 space-y-1">
+            <div class="font-bold text-amber-900 uppercase">Risks</div>
+            <p class="text-stone-700 leading-relaxed">Lube contraction (-12.3% Q2); PP resin spikes raising interest costs; unproven right-to-win in dosing pens & semicon trays; shortfall risk vs. ₹250 Cr FY27 EBITDA goal.</p>
+          </div>
+        </div>
+        <div class="p-4 rounded-lg bg-stone-900 text-stone-100 text-xs sm:text-sm leading-relaxed">
+          <strong class="text-amber-300">Actionable Verdict:</strong> Because probability-weighted expected returns (~12.6% p.a.) barely clear an ~11.5%–12.0% equity hurdle rate and intrinsic DCF points to ₹268–₹274, <strong>await pullbacks toward ₹290–₹310 before initiating fresh positions</strong>. Existing holders can hold for ₹437–₹450 over 12–24 months provided unit margins hold above ₹45/kg.
+        </div>
+      </div>
+
+      <div class="lg:col-span-5 bg-white rounded-xl border border-stone-200 p-6 shadow-2xs space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-base font-bold text-stone-900">Quarterly Monitoring Checklist</h3>
+            <p class="text-xs text-stone-500">Click signals to track thesis milestones across Q3 FY27–FY28.</p>
+          </div>
+          <span id="checklistScore" class="text-xs font-bold px-2 py-1 rounded bg-stone-100 text-stone-700">0 / 5 Verified</span>
+        </div>
+        <div id="monitoringList" class="space-y-2 text-xs">
+          <label class="flex items-start gap-2.5 p-2.5 rounded-lg border border-stone-200 hover:bg-stone-50 cursor-pointer">
+            <input type="checkbox" class="monitor-chk mt-0.5 rounded accent-[#0F4C5C]">
+            <span><strong>1. Unit Margin Retention:</strong> Standalone EBITDA/kg sustains ≥₹45/kg in Q3 & Q4 FY27 (slipping to ₹40–42/kg signals Bear Case).</span>
+          </label>
+          <label class="flex items-start gap-2.5 p-2.5 rounded-lg border border-stone-200 hover:bg-stone-50 cursor-pointer">
+            <input type="checkbox" class="monitor-chk mt-0.5 rounded accent-[#0F4C5C]">
+            <span><strong>2. Volume & Lube Floor:</strong> Blended volume re-accelerates &gt;10%–12% YoY (vs. 8.0% H1) and lubricants stabilize &gt;1,600–1,700 MT/qtr.</span>
+          </label>
+          <label class="flex items-start gap-2.5 p-2.5 rounded-lg border border-stone-200 hover:bg-stone-50 cursor-pointer">
+            <input type="checkbox" class="monitor-chk mt-0.5 rounded accent-[#0F4C5C]">
+            <span><strong>3. Pharma & Vibe Dispatches:</strong> Commercial Iodex dispatches by Q4 FY27; droppers & Vibe closures by Q1 FY28; pharma ≥₹13–15 Cr/qtr.</span>
+          </label>
+          <label class="flex items-start gap-2.5 p-2.5 rounded-lg border border-stone-200 hover:bg-stone-50 cursor-pointer">
+            <input type="checkbox" class="monitor-chk mt-0.5 rounded accent-[#0F4C5C]">
+            <span><strong>4. Capex & Debt Discipline:</strong> FY27 cash capex stays within ₹80–85 Cr and total borrowings decline below ₹180 Cr by March 2027.</span>
+          </label>
+          <label class="flex items-start gap-2.5 p-2.5 rounded-lg border border-stone-200 hover:bg-stone-50 cursor-pointer">
+            <input type="checkbox" class="monitor-chk mt-0.5 rounded accent-[#0F4C5C]">
+            <span><strong>5. FII & Footnote Disclosures:</strong> FII selling (7.94% stake) stabilizes; full RPT, contingent-liability & pledge footnotes verified in next filing.</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-stone-200 bg-white mt-12 py-6">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-stone-500">
+    <div>Sources: Mold-Tek Packaging NSE Filings, Q2 FY27 Earnings Release & Call, FY26 Annual Report, ICRA Rationale (Sep 23, 2026), Axis Direct & Prabhudas Lilladher Reports, Screener/Finology/Trendlyne.</div>
+    <div class="font-medium text-stone-600">Standardized for 1:1 Bonus (6.646 Cr Shares) • Independent Analytical Synthesis</div>
+  </div>
+</footer>
+
+<script>
+  function wrapLabel(label, maxChars) {
+    if (Array.isArray(label)) return label;
+    if (typeof label !== 'string' || label.length <= maxChars) return label;
+    const words = label.split(' ');
+    const lines = [];
+    let current = '';
+    for (let i = 0; i < words.length; i++) {
+      const test = current ? current + ' ' + words[i] : words[i];
+      if (test.length > maxChars && current) {
+        lines.push(current);
+        current = words[i];
+      } else {
+        current = test;
+      }
+    }
+    if (current) lines.push(current);
+    return lines;
+  }
+
+  const commonTooltip = {
+    backgroundColor: '#1C1917',
+    titleFont: { size: 12, weight: 'bold' },
+    bodyFont: { size: 12 },
+    padding: 10,
+    cornerRadius: 6
+  };
+
+  const segmentData = {
+    paints: {
+      badge: 'Core Industrial Cash Generator',
+      title: 'Paints Packaging (IML & HTL Pails)',
+      growth: '+8.6% Volume (+26% Value)',
+      share: '~44% FY26 / ~46% Q1 FY27',
+      clients: 'Asian Paints, Grasim (Birla Opus)',
+      economics: '75–90 day receivable cycle',
+      commentary: "Paints represent nearly half of company revenue and 51% of Q1 FY27 volume, anchored by Asian Paints and Grasim's Birla Opus ramp-up (served via the Mahad facility). While regional proximity and IML tooling create switching friction, concentrated buyer power enforces 75–90 day credit terms and periodic retooling (such as Asian Paints' RCP compliance transition in FY26)."
+    },
+    ff: {
+      badge: 'Primary Volume & Mix Growth Engine',
+      title: 'Food & FMCG (Q-Packs & Thin-Wall Tubs)',
+      growth: '+23.7% Volume (Thin-Wall H1 +40%)',
+      share: '~22% in Q1 FY27 (₹66 Cr)',
+      clients: 'Mondelez, HUL, Swiggy Merchants, Dairy/Edible Oil',
+      economics: '~₹70/kg EBITDA potential',
+      commentary: 'Comprising square Q-Packs for edible oils/cashews and thin-wall dairy, ice-cream, and food-delivery containers, F&F delivered a 20%+ three-year CAGR. Panipat capacity doubled to 8 machines in August 2026 alongside Cheyyar ramping, though Q-Pack orders remain sensitive to sudden PP polymer price spikes.'
+    },
+    lubes: {
+      badge: 'Structural & Geopolitical Drag',
+      title: 'Lubricants Packaging (Industrial Pails)',
+      growth: '-12.3% Volume (-15% in H1 FY27)',
+      share: '~13% in Q1 FY27 (₹38 Cr)',
+      clients: 'Castrol, Shell, Veedol (Exited BPCL)',
+      economics: 'Price-sensitive PSU tender exposure',
+      commentary: 'Historically roughly a quarter of company volumes, lubricants contracted following the voluntary exit from low-margin PSU tender BPCL (removing ₹14–15 Cr annual turnover) and Middle East base-oil supply disruptions affecting private blenders in H1 FY27.'
+    },
+    pharma: {
+      badge: 'Highest Unit-Margin Specialty Vertical',
+      title: 'Pharmaceutical & Healthcare Packaging',
+      growth: '+26.3% Q2 Vol (322 MT) / +209% FY26 Rev',
+      share: '~4% in FY26 (₹35 Cr; FY27E ₹50–55 Cr)',
+      clients: '25+ Audited Pharma Firms, Iodex / MNCs',
+      economics: '₹100–120/kg EBITDA guided',
+      commentary: 'Operating from DMF-compliant cleanrooms with single-piece nitrosamine-free canisters and child-resistant closures, pharma scaled from ₹11 Cr in FY25 to ₹35 Cr in FY26. Commercial pickup has lagged audit counts, making the Dec 2026–Jan 2027 Iodex launch and May 2027 ophthalmic dropper rollout critical milestones.'
+    }
+  };
+
+  document.querySelectorAll('.seg-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.seg-btn').forEach(b => {
+        b.classList.remove('bg-[#0F4C5C]', 'text-white');
+        b.classList.add('bg-stone-100', 'text-stone-700');
+      });
+      btn.classList.remove('bg-stone-100', 'text-stone-700');
+      btn.classList.add('bg-[#0F4C5C]', 'text-white');
+      const d = segmentData[btn.dataset.seg];
+      document.getElementById('segBadge').textContent = d.badge;
+      document.getElementById('segTitle').textContent = d.title;
+      document.getElementById('segGrowth').textContent = d.growth;
+      document.getElementById('segShare').textContent = d.share;
+      document.getElementById('segClients').textContent = d.clients;
+      document.getElementById('segEconomics').textContent = d.economics;
+      document.getElementById('segCommentary').textContent = d.commentary;
+    });
+  });
+
+  document.querySelectorAll('.debate-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.debate-btn').forEach(b => {
+        b.classList.remove('bg-[#0F4C5C]', 'text-white');
+        b.classList.add('text-stone-600');
+      });
+      btn.classList.add('bg-[#0F4C5C]', 'text-white');
+      btn.classList.remove('text-stone-600');
+      const mode = btn.dataset.debate;
+      const bull = document.getElementById('bullCard');
+      const bear = document.getElementById('bearCard');
+      const container = document.getElementById('debateContainer');
+      if (mode === 'both') {
+        bull.classList.remove('hidden');
+        bear.classList.remove('hidden');
+        container.classList.add('md:grid-cols-2');
+      } else if (mode === 'bull') {
+        bull.classList.remove('hidden');
+        bear.classList.add('hidden');
+        container.classList.remove('md:grid-cols-2');
+      } else {
+        bull.classList.add('hidden');
+        bear.classList.remove('hidden');
+        container.classList.remove('md:grid-cols-2');
+      }
+    });
+  });
+
+  document.querySelectorAll('.cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.cat-btn').forEach(b => {
+        b.classList.remove('bg-[#0F4C5C]', 'text-white');
+        b.classList.add('text-stone-600');
+      });
+      btn.classList.add('bg-[#0F4C5C]', 'text-white');
+      btn.classList.remove('text-stone-600');
+      const filter = btn.dataset.cat;
+      document.querySelectorAll('.catalyst-card').forEach(card => {
+        if (filter === 'all' || card.dataset.window === filter) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+  new Chart(document.getElementById('segmentMixChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Paints (~46%)', 'Food & FMCG (~22%)', 'Other / HTL / Industrial (~15%)', 'Lubricants (~13%)', 'Pharma & Healthcare (~4%)'].map(l => wrapLabel(l, 16)),
+      datasets: [{
+        data: [46, 22, 15, 13, 4],
+        backgroundColor: ['#0F4C5C', '#2E6F40', '#A8A29E', '#B45309', '#0284C7'],
+        borderColor: '#FFFFFF',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '62%',
+      plugins: {
+        legend: { position: 'right', labels: { boxWidth: 12, font: { size: 11 }, color: '#44403C' } },
+        tooltip: {
+          ...commonTooltip,
+          callbacks: {
+            label: ctx => ' Share: ~' + ctx.parsed + '% of Revenue'
+          }
+        }
+      }
+    }
+  });
+
+  const finCtx = document.getElementById('financialTrendsChart').getContext('2d');
+  let finChart = new Chart(finCtx, {
+    type: 'bar',
+    data: {
+      labels: ['FY22', 'FY23', 'FY24', 'FY25', 'FY26', 'TTM (Sep 26)'],
+      datasets: [
+        {
+          label: 'Revenue (₹ Cr)',
+          data: [631, 730, 699, 781.3, 886.6, 1011],
+          backgroundColor: '#0F4C5C',
+          borderRadius: 4,
+          yAxisID: 'y'
+        },
+        {
+          label: 'EBITDA (₹ Cr)',
+          data: [121, 136, 133, 142, 173, 193],
+          backgroundColor: '#5EEAD4',
+          borderRadius: 4,
+          yAxisID: 'y'
+        },
+        {
+          label: 'Bonus-Adj. EPS (₹)',
+          data: [10.19, 12.13, 10.01, 9.11, 10.96, 12.28],
+          type: 'line',
+          borderColor: '#B45309',
+          backgroundColor: '#B45309',
+          borderWidth: 2.5,
+          pointRadius: 4,
+          tension: 0.25,
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } },
+        tooltip: commonTooltip
+      },
+      scales: {
+        y: { beginAtZero: true, title: { display: true, text: '₹ Crore', font: { size: 11 } }, grid: { color: '#E7E5E4' } },
+        y1: { beginAtZero: true, max: 16, position: 'right', title: { display: true, text: 'Bonus-Adj EPS (₹)', font: { size: 11 } }, grid: { drawOnChartArea: false } }
+      }
+    }
+  });
+
+  document.querySelectorAll('.fin-mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.fin-mode-btn').forEach(b => {
+        b.classList.remove('bg-[#0F4C5C]', 'text-white');
+        b.classList.add('text-stone-700');
+      });
+      btn.classList.add('bg-[#0F4C5C]', 'text-white');
+      btn.classList.remove('text-stone-700');
+      const mode = btn.dataset.finmode;
+      finChart.destroy();
+      if (mode === 'earnings') {
+        document.getElementById('finChartTitle').textContent = 'Scale vs. Per-Share Earnings Divergence (FY22–TTM)';
+        document.getElementById('finChartSubtitle').textContent = 'Standalone Revenue & EBITDA (₹ Cr) vs. Bonus-Adjusted EPS (₹) — showing depreciation & interest drag.';
+        finChart = new Chart(finCtx, {
+          type: 'bar',
+          data: {
+            labels: ['FY22', 'FY23', 'FY24', 'FY25', 'FY26', 'TTM (Sep 26)'],
+            datasets: [
+              { label: 'Revenue (₹ Cr)', data: [631, 730, 699, 781.3, 886.6, 1011], backgroundColor: '#0F4C5C', borderRadius: 4, yAxisID: 'y' },
+              { label: 'EBITDA (₹ Cr)', data: [121, 136, 133, 142, 173, 193], backgroundColor: '#5EEAD4', borderRadius: 4, yAxisID: 'y' },
+              { label: 'Bonus-Adj. EPS (₹)', data: [10.19, 12.13, 10.01, 9.11, 10.96, 12.28], type: 'line', borderColor: '#B45309', backgroundColor: '#B45309', borderWidth: 2.5, pointRadius: 4, tension: 0.25, yAxisID: 'y1' }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } }, tooltip: commonTooltip },
+            scales: {
+              y: { beginAtZero: true, title: { display: true, text: '₹ Crore', font: { size: 11 } }, grid: { color: '#E7E5E4' } },
+              y1: { beginAtZero: true, max: 16, position: 'right', title: { display: true, text: 'Bonus-Adj EPS (₹)', font: { size: 11 } }, grid: { drawOnChartArea: false } }
+            }
+          }
+        });
+      } else if (mode === 'roic') {
+        document.getElementById('finChartTitle').textContent = 'Margin Stability vs. ROIC Compression (FY22–FY26)';
+        document.getElementById('finChartSubtitle').textContent = 'OPM stayed near ~19%, while heavy capex compressed NOPAT ROIC from 16.9% to 10.2%.';
+        finChart = new Chart(finCtx, {
+          type: 'line',
+          data: {
+            labels: ['FY22', 'FY23', 'FY24', 'FY25', 'FY26'],
+            datasets: [
+              { label: 'Operating Margin (OPM %)', data: [19.2, 18.6, 19.0, 18.2, 19.5], borderColor: '#0F4C5C', backgroundColor: '#0F4C5C', borderWidth: 2.5, pointRadius: 4, tension: 0.2 },
+              { label: 'Calculated ROIC (%)', data: [16.9, 15.2, 11.4, 9.5, 10.2], borderColor: '#991B1B', backgroundColor: '#991B1B', borderWidth: 2.5, pointRadius: 4, tension: 0.2 },
+              { label: 'Net Profit Margin (%)', data: [10.1, 11.0, 9.6, 7.8, 8.2], borderColor: '#B45309', backgroundColor: '#B45309', borderDash: [5, 4], borderWidth: 2, pointRadius: 4, tension: 0.2 }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } }, tooltip: commonTooltip },
+            scales: {
+              y: { beginAtZero: true, max: 24, title: { display: true, text: 'Percentage (%)', font: { size: 11 } }, grid: { color: '#E7E5E4' } }
+            }
+          }
+        });
+      } else {
+        document.getElementById('finChartTitle').textContent = 'Operating Cash Flow, Negative Cumulative FCF & Rising Debt';
+        document.getElementById('finChartSubtitle').textContent = 'Cumulative FY22–FY26 CFO of ₹469 Cr was outweighed by ₹609 Cr capex (-₹126 Cr FCF), lifting debt to ₹215 Cr.';
+        finChart = new Chart(finCtx, {
+          type: 'bar',
+          data: {
+            labels: ['FY22', 'FY23', 'FY24', 'FY25', 'FY26'],
+            datasets: [
+              { label: 'Cash from Ops (CFO)', data: [3, 152, 79, 110, 125], backgroundColor: '#2E6F40', borderRadius: 4 },
+              { label: 'Free Cash Flow (FCF)', data: [-50, 5, -56, -33, 8], backgroundColor: '#B45309', borderRadius: 4 },
+              { label: 'Total Borrowings', data: [44, 47, 126, 176, 215], type: 'line', borderColor: '#1C1917', backgroundColor: '#1C1917', borderWidth: 2.5, pointRadius: 4 }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } }, tooltip: commonTooltip },
+            scales: {
+              y: { title: { display: true, text: '₹ Crore', font: { size: 11 } }, grid: { color: '#E7E5E4' } }
+            }
+          }
+        });
+      }
+    });
+  });
+
+  new Chart(document.getElementById('guidanceBridgeChart'), {
+    type: 'bar',
+    data: {
+      labels: ['FY26 Actual', 'H1 FY27 Actual', 'Analyst FY27E Base', 'Tonnage-Implied FY27', 'Mgmt Stretch Guidance'].map(l => wrapLabel(l, 14)),
+      datasets: [{
+        label: 'EBITDA (₹ Cr)',
+        data: [173.0, 107.7, 213.0, 217.6, 250.0],
+        backgroundColor: ['#78716C', '#0284C7', '#0F4C5C', '#2E6F40', '#B45309'],
+        borderRadius: 5
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          ...commonTooltip,
+          callbacks: {
+            label: ctx => ' EBITDA: ₹' + ctx.parsed.y.toFixed(1) + ' Cr'
+          }
+        }
+      },
+      scales: {
+        y: { beginAtZero: true, max: 280, title: { display: true, text: 'EBITDA (₹ Cr)', font: { size: 11 } }, grid: { color: '#E7E5E4' } }
+      }
+    }
+  });
+
+  const peerCtx = document.getElementById('peerValuationChart').getContext('2d');
+  let peerChart = new Chart(peerCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Mold-Tek', 'Hitech Corp', 'Shaily Engg', 'EPL Ltd', 'TCPL Pack', 'Time Techno'],
+      datasets: [
+        { label: 'TTM P/E (x)', data: [28.4, 57.8, 70.0, 18.4, 29.0, 18.7], backgroundColor: '#0F4C5C', borderRadius: 4, yAxisID: 'y' },
+        { label: 'ROCE (%)', data: [13.3, 9.6, 30.3, 17.8, 17.9, 16.5], backgroundColor: '#B45309', borderRadius: 4, yAxisID: 'y1' }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } }, tooltip: commonTooltip },
+      scales: {
+        y: { beginAtZero: true, max: 80, title: { display: true, text: 'TTM P/E (x)', font: { size: 11 } }, grid: { color: '#E7E5E4' } },
+        y1: { beginAtZero: true, max: 35, position: 'right', title: { display: true, text: 'ROCE (%)', font: { size: 11 } }, grid: { drawOnChartArea: false } }
+      }
+    }
+  });
+
+  document.querySelectorAll('.peer-mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.peer-mode-btn').forEach(b => {
+        b.classList.remove('bg-[#0F4C5C]', 'text-white');
+        b.classList.add('text-stone-700');
+      });
+      btn.classList.add('bg-[#0F4C5C]', 'text-white');
+      btn.classList.remove('text-stone-700');
+      peerChart.destroy();
+      if (btn.dataset.peermode === 'pe_roce') {
+        peerChart = new Chart(peerCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Mold-Tek', 'Hitech Corp', 'Shaily Engg', 'EPL Ltd', 'TCPL Pack', 'Time Techno'],
+            datasets: [
+              { label: 'TTM P/E (x)', data: [28.4, 57.8, 70.0, 18.4, 29.0, 18.7], backgroundColor: '#0F4C5C', borderRadius: 4, yAxisID: 'y' },
+              { label: 'ROCE (%)', data: [13.3, 9.6, 30.3, 17.8, 17.9, 16.5], backgroundColor: '#B45309', borderRadius: 4, yAxisID: 'y1' }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } }, tooltip: commonTooltip },
+            scales: {
+              y: { beginAtZero: true, max: 80, title: { display: true, text: 'TTM P/E (x)', font: { size: 11 } }, grid: { color: '#E7E5E4' } },
+              y1: { beginAtZero: true, max: 35, position: 'right', title: { display: true, text: 'ROCE (%)', font: { size: 11 } }, grid: { drawOnChartArea: false } }
+            }
+          }
+        });
+      } else {
+        peerChart = new Chart(peerCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Mold-Tek', 'Hitech Corp', 'Shaily Engg', 'EPL Ltd', 'TCPL Pack', 'Time Techno'],
+            datasets: [
+              { label: 'Operating Margin (OPM %)', data: [19.1, 13.0, 14.5, 20.0, 16.5, 15.0], backgroundColor: '#0F4C5C', borderRadius: 4 },
+              { label: 'Return on Equity (ROE %)', data: [10.8, 5.7, 28.2, 16.1, 15.5, 13.1], backgroundColor: '#2E6F40', borderRadius: 4 }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } }, tooltip: commonTooltip },
+            scales: {
+              y: { beginAtZero: true, max: 35, title: { display: true, text: 'Percentage (%)', font: { size: 11 } }, grid: { color: '#E7E5E4' } }
+            }
+          }
+        });
+      }
+    });
+  });
+
+  new Chart(document.getElementById('dcfProjectionChart'), {
+    type: 'bar',
+    data: {
+      labels: ['FY27E', 'FY28E', 'FY29E', 'FY30E', 'FY31E', 'FY32E'],
+      datasets: [
+        { label: 'NOPAT (25.5% Tax)', data: [105.0, 124.9, 140.8, 161.0, 183.1, 204.1], backgroundColor: '#0F4C5C', borderRadius: 4 },
+        { label: 'Capex Outflow', data: [85.0, 90.0, 95.0, 100.0, 105.0, 112.0], backgroundColor: '#D6D3D1', borderRadius: 4 },
+        { label: 'Free Cash Flow to Firm (FCFF)', data: [58.5, 90.4, 108.8, 127.9, 150.8, 168.4], type: 'line', borderColor: '#2E6F40', backgroundColor: '#2E6F40', borderWidth: 3, pointRadius: 4, tension: 0.25 }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } }, tooltip: commonTooltip },
+      scales: {
+        y: { beginAtZero: true, title: { display: true, text: '₹ Crore', font: { size: 11 } }, grid: { color: '#E7E5E4' } }
+      }
+    }
+  });
+
+  let investmentsLiquid = true;
+  const fcffStream = [90.4, 108.8, 127.9, 150.8, 168.4];
+  const sharesCr = 6.646;
+  const cmp = 349.0;
+
+  function updateDcf() {
+    const wacc = parseFloat(document.getElementById('waccSlider').value) / 100;
+    const tg = parseFloat(document.getElementById('tgSlider').value) / 100;
+    document.getElementById('waccVal').textContent = (wacc * 100).toFixed(2).replace(/\.00$/, '.0') + '%';
+    document.getElementById('tgVal').textContent = (tg * 100).toFixed(2).replace(/\.00$/, '.0') + '%';
+
+    let pvExplicit = 0;
+    for (let t = 1; t <= fcffStream.length; t++) {
+      pvExplicit += fcffStream[t - 1] / Math.pow(1 + wacc, t);
+    }
+    const terminalVal = (fcffStream[4] * (1 + tg)) / (wacc - tg);
+    const pvTerminal = terminalVal / Math.pow(1 + wacc, 5);
+    const evMar27 = pvExplicit + pvTerminal;
+
+    const discount45m = Math.pow(1 + wacc, 4.5 / 12);
+    const pvH2Fy27 = 29.0 / Math.pow(1 + wacc, 2.25 / 12);
+    const evNov26 = (evMar27 / discount45m) + pvH2Fy27;
+
+    const netDebt = investmentsLiquid ? 159.0 : 203.0;
+    const eqVal = evNov26 - netDebt;
+    const fairPrice = eqVal / sharesCr;
+    const pctDiff = ((fairPrice - cmp) / cmp) * 100;
+
+    document.getElementById('dcfEvOut').textContent = '₹' + Math.round(evNov26).toLocaleString('en-IN') + ' Cr';
+    document.getElementById('dcfEqOut').textContent = '₹' + Math.round(eqVal).toLocaleString('en-IN') + ' Cr';
+    document.getElementById('dcfPriceOut').textContent = '₹' + Math.round(fairPrice);
+
+    const diffEl = document.getElementById('dcfDiffOut');
+    if (pctDiff >= 0) {
+      diffEl.textContent = '+' + pctDiff.toFixed(1) + '% upside vs. ₹349.00 CMP';
+      diffEl.className = 'text-xs font-semibold text-emerald-700';
+    } else {
+      diffEl.textContent = pctDiff.toFixed(1) + '% downside vs. ₹349.00 CMP';
+      diffEl.className = 'text-xs font-semibold text-red-700';
+    }
+  }
+
+  document.getElementById('waccSlider').addEventListener('input', updateDcf);
+  document.getElementById('tgSlider').addEventListener('input', updateDcf);
+  document.getElementById('liqYesBtn').addEventListener('click', () => {
+    investmentsLiquid = true;
+    document.getElementById('liqYesBtn').className = 'px-2.5 py-2 rounded-lg font-semibold bg-[#0F4C5C] text-white border border-[#0F4C5C] text-left';
+    document.getElementById('liqNoBtn').className = 'px-2.5 py-2 rounded-lg font-semibold bg-white text-stone-700 border border-stone-300 text-left';
+    updateDcf();
+  });
+  document.getElementById('liqNoBtn').addEventListener('click', () => {
+    investmentsLiquid = false;
+    document.getElementById('liqNoBtn').className = 'px-2.5 py-2 rounded-lg font-semibold bg-[#0F4C5C] text-white border border-[#0F4C5C] text-left';
+    document.getElementById('liqYesBtn').className = 'px-2.5 py-2 rounded-lg font-semibold bg-white text-stone-700 border border-stone-300 text-left';
+    updateDcf();
+  });
+
+  const scenChart = new Chart(document.getElementById('scenarioChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Bear Case (25%)', 'Current CMP', 'Base Case (50%)', 'Prob.-Weighted EV', 'Bull Case (25%)'].map(l => wrapLabel(l, 15)),
+      datasets: [{
+        label: 'Share Price (₹)',
+        data: [210, 349, 437, 443, 687],
+        backgroundColor: ['#991B1B', '#78716C', '#0F4C5C', '#1C1917', '#2E6F40'],
+        borderRadius: 5
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          ...commonTooltip,
+          callbacks: {
+            label: ctx => {
+              const v = ctx.parsed.x;
+              const ret = (((v - 349) / 349) * 100).toFixed(1);
+              return ' ₹' + v + ' (' + (ret >= 0 ? '+' : '') + ret + '% vs CMP)';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { beginAtZero: true, max: 760, title: { display: true, text: 'Implied Price per Share (₹)', font: { size: 11 } }, grid: { color: '#E7E5E4' } }
+      }
+    }
+  });
+
+  function updateScenarioWeights() {
+    const wBear = parseFloat(document.getElementById('bearProb').value);
+    const wBase = parseFloat(document.getElementById('baseProb').value);
+    const wBull = parseFloat(document.getElementById('bullProb').value);
+    const sum = wBear + wBase + wBull;
+
+    const nBear = sum > 0 ? wBear / sum : 0.25;
+    const nBase = sum > 0 ? wBase / sum : 0.50;
+    const nBull = sum > 0 ? wBull / sum : 0.25;
+
+    document.getElementById('bearProbLbl').textContent = Math.round(nBear * 100) + '%';
+    document.getElementById('baseProbLbl').textContent = Math.round(nBase * 100) + '%';
+    document.getElementById('bullProbLbl').textContent = Math.round(nBull * 100) + '%';
+
+    const evPrice = Math.round(nBear * 210 + nBase * 437 + nBull * 687);
+    const cumRet = ((evPrice - 349) / 349) * 100;
+    const annRet = (Math.pow(evPrice / 349, 0.5) - 1) * 100;
+
+    document.getElementById('weightedTargetOut').textContent =
+      '₹' + evPrice + ' (' + (cumRet >= 0 ? '+' : '') + cumRet.toFixed(1) + '% / ' + (annRet >= 0 ? '+' : '') + annRet.toFixed(1) + '% annualized)';
+
+    scenChart.data.labels = [
+      wrapLabel('Bear Case (' + Math.round(nBear * 100) + '%)', 15),
+      wrapLabel('Current CMP', 15),
+      wrapLabel('Base Case (' + Math.round(nBase * 100) + '%)', 15),
+      wrapLabel('Prob.-Weighted EV', 15),
+      wrapLabel('Bull Case (' + Math.round(nBull * 100) + '%)', 15)
+    ];
+    scenChart.data.datasets[0].data = [210, 349, 437, evPrice, 687];
+    scenChart.update();
+  }
+
+  document.getElementById('bearProb').addEventListener('input', updateScenarioWeights);
+  document.getElementById('baseProb').addEventListener('input', updateScenarioWeights);
+  document.getElementById('bullProb').addEventListener('input', updateScenarioWeights);
+  document.getElementById('resetProbBtn').addEventListener('click', () => {
+    document.getElementById('bearProb').value = 25;
+    document.getElementById('baseProb').value = 50;
+    document.getElementById('bullProb').value = 25;
+    updateScenarioWeights();
+  });
+
+  new Chart(document.getElementById('shareholdingChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Promoters', 'FIIs', 'DIIs (MFs)', 'Public / Retail'],
+      datasets: [
+        { label: 'June 2025 (%)', data: [33.17, 16.91, 19.76, 30.16], backgroundColor: '#A8A29E', borderRadius: 4 },
+        { label: 'September 2026 (%)', data: [33.17, 7.94, 21.62, 37.26], backgroundColor: '#0F4C5C', borderRadius: 4 }
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } }, tooltip: commonTooltip },
+      scales: {
+        x: { beginAtZero: true, max: 45, title: { display: true, text: 'Shareholding (%)', font: { size: 11 } }, grid: { color: '#E7E5E4' } }
+      }
+    }
+  });
+
+  document.querySelectorAll('.monitor-chk').forEach(chk => {
+    chk.addEventListener('change', () => {
+      const checked = document.querySelectorAll('.monitor-chk:checked').length;
+      const badge = document.getElementById('checklistScore');
+      badge.textContent = checked + ' / 5 Verified';
+      if (checked >= 4) {
+        badge.className = 'text-xs font-bold px-2 py-1 rounded bg-emerald-100 text-emerald-900';
+      } else if (checked >= 2) {
+        badge.className = 'text-xs font-bold px-2 py-1 rounded bg-teal-100 text-teal-900';
+      } else {
+        badge.className = 'text-xs font-bold px-2 py-1 rounded bg-stone-100 text-stone-700';
+      }
+    });
+  });
+
+  const sections = document.querySelectorAll('section[id]');
+  const navPills = document.querySelectorAll('.nav-pill');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(sec => {
+      const top = sec.offsetTop - 150;
+      if (window.scrollY >= top) current = sec.getAttribute('id');
+    });
+    navPills.forEach(pill => {
+      pill.classList.remove('active', 'bg-[#0F4C5C]', 'text-white');
+      pill.classList.add('text-stone-600');
+      if (pill.getAttribute('href') === '#' + current) {
+        pill.classList.add('active', 'bg-[#0F4C5C]', 'text-white');
+        pill.classList.remove('text-stone-600');
+      }
+    });
+  });
+</script>
+</body>
+</html>
